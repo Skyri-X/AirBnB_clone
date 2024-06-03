@@ -155,13 +155,13 @@ class HBNBCommand(cmd.Cmd):
 
                 attributes[att_name] = att_val
                 att_name = att_val = ""
-
-        new_instance = HBNBCommand.classes[c_name]()
+        
+        new_instance = HBNBCommand.classes[c_name]() # the error is here
         for key in attributes:
             if hasattr(new_instance, key):
                 setattr(new_instance, key, attributes[key])
 
-        storage.save()
+        new_instance.save()
         print(new_instance.id)
 
     def help_create(self):
@@ -226,7 +226,8 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            obj = storage.all(c_name)[key]
+            storage.delete(obj)
             storage.save()
         except KeyError:
             print("** no instance found **")
